@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Attendance">
+  <title>Workforce Portal | Attendance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #4f46e5; --primary-hover: #4338ca;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+      --text-main: #1e293b; --text-muted: #64748b; --border: #e2e8f0;
+      --success: #10b981; --success-hover: #059669;
+      --danger: #ef4444; --danger-hover: #dc2626;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { background: var(--bg-gradient); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; min-height: 100dvh; padding: 20px; }
+    .app-card { background: rgba(255,255,255,0.97); width: 100%; max-width: 440px; padding: 36px 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); }
+    .brand-header { text-align: center; margin-bottom: 26px; }
+    .brand-logo { width: 54px; height: 54px; background: var(--primary); color: #fff; border-radius: 15px; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; margin-bottom: 10px; box-shadow: 0 8px 16px rgba(79,70,229,0.3); }
+    .brand-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .brand-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #334155; }
+    input[type="text"], input[type="email"], input[type="password"] { width: 100%; min-height: 50px; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 16px; background: #f8fafc; color: var(--text-main); outline: none; transition: all 0.2s ease; }
+    input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(79,70,229,0.12); }
+    .btn { width: 100%; min-height: 54px; padding: 14px; background: var(--primary); color: #fff; border: none; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:active { transform: scale(0.98); }
+    .btn:hover { background: var(--primary-hover); }
+    .btn:disabled { opacity: 0.65; cursor: not-allowed; }
+    .btn-success { background: var(--success); } .btn-success:hover { background: var(--success-hover); }
+    .btn-danger { background: var(--danger); } .btn-danger:hover { background: var(--danger-hover); }
+    .nav-links { display: flex; justify-content: space-between; gap: 10px; margin-top: 22px; font-size: 14px; font-weight: 500; }
+    .nav-links a { color: var(--primary); text-decoration: none; cursor: pointer; padding: 6px 0; }
+    .alert { padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.4; margin-bottom: 18px; }
+    .alert-danger { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .tip { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.45; margin-bottom: 18px; }
+    .hidden { display: none !important; }
+    .profile-card { background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: 16px; margin-bottom: 14px; }
+    .profile-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .profile-name { font-size: 17px; font-weight: 700; }
+    .profile-id { font-size: 12px; color: var(--text-muted); }
+    .badge { padding: 5px 11px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #d1fae5; color: #047857; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; }
+    .meta-item { background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #f1f5f9; }
+    .meta-label { color: var(--text-muted); margin-bottom: 2px; }
+    .meta-val { font-weight: 600; font-size: 13px; }
+    .timer-container { text-align: center; padding: 16px 0 18px; }
+    .timer-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .timer-value { font-size: 44px; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; margin-top: 4px; }
+    .gps-box { font-size: 13px; text-align: center; padding: 12px; border-radius: 12px; margin-top: 12px; background: #f1f5f9; line-height: 1.45; white-space: pre-line; }
+    .divider { height: 1px; background: var(--border); margin: 22px 0; }
+
+    /* Phone: full-screen app layout */
+    @media (max-width: 600px) {
+      body { padding: 0; align-items: stretch; background: #fff; }
+      .app-card { max-width: none; min-height: 100vh; min-height: 100dvh; border-radius: 0; box-shadow: none; background: #fff;
+        padding: calc(26px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom)); }
+      .brand-header { background: var(--bg-gradient); margin: calc(-26px - env(safe-area-inset-top)) -20px 24px; padding: calc(30px + env(safe-area-inset-top)) 20px 26px; border-radius: 0 0 28px 28px; }
+      .brand-title { color: #fff; } .brand-subtitle { color: #c7d2fe; }
+      .brand-logo { box-shadow: none; background: rgba(255,255,255,0.18); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-card">
+
+    <div class="brand-header">
+      <div class="brand-logo">✓</div>
+      <div class="brand-title">Workforce Portal</div>
+      <div class="brand-subtitle">Attendance &amp; Field Operations</div>
+    </div>
+
+    <div id="browserTip" class="tip hidden"></div>
+
+    <!-- LOGIN -->
+    <div id="loginScreen">
+      <div id="loginMessage" class="alert hidden"></div>
+      <div class="form-group">
+        <label for="loginEmployeeId">Employee ID</label>
+        <input type="text" id="loginEmployeeId" placeholder="e.g. 1" inputmode="numeric" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button id="loginBtn" class="btn" onclick="loginEmployee()">Log In</button>
+      <div class="nav-links">
+        <a onclick="showCreatePassword()">First time? Create Password</a>
+        <a onclick="showForgotPassword()">Forgot Password?</a>
+      </div>
+    </div>
+
+    <!-- CREATE PASSWORD -->
+    <div id="createPasswordScreen" class="hidden">
+      <div id="createMessage" class="alert hidden"></div>
+      <div class="form-group">
+        <label for="createEmployeeId">Employee ID</label>
+        <input type="text" id="createEmployeeId" placeholder="Enter Employee ID" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label for="createEmail">Registered Email</label>
+        <input type="email" id="createEmail" placeholder="name@company.com">
+      </div>
+      <button id="createOtpBtn" class="btn" onclick="sendCreateOTP()">Request Security OTP</button>
+      <div id="createOtpArea" class="hidden" style="margin-top: 18px;">
+        <div class="form-group">
+          <label for="createOtp">6-Digit OTP</label>
+          <input type="text" id="createOtp" placeholder="123456" maxlength="6" inputmode="numeric">
+        </div>
+        <div class="form-group">
+          <label for="createPassword">New Password</label>
+          <input type="password" id="createPassword" placeholder="Min 6 characters">
+        </div>
+        <div class="form-group">
+          <label for="createConfirmPassword">Confirm Password</label>
+          <input type="password" id="createConfirmPassword" placeholder="Repeat password">
+        </div>
+        <button id="createPasswordBtn" class="btn btn-success" onclick="createPassword()">Set Password</button>
+      </div>
+      <div class="nav-links" style="justify-content: center;">
+        <a onclick="showLogin()">← Back to Login</a>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="forgotPasswordScreen" class="hidden">
+      <div id="forgotMessage" class="alert hidden"></div>
+      <div class="form-group">
+        <label for="forgotEmployeeId">Employee ID</label>
+        <input type="text" id="forgotEmployeeId" placeholder="Enter Employee ID" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label for="forgotEmail">Registered Email</label>
+        <input type="email" id="forgotEmail" placeholder="name@company.com">
+      </div>
+      <button id="forgotOtpBtn" class="btn" onclick="sendForgotOTP()">Request Reset OTP</button>
+      <div id="forgotOtpArea" class="hidden" style="margin-top: 18px;">
+        <div class="form-group">
+          <label for="forgotOtp">6-Digit OTP</label>
+          <input type="text" id="forgotOtp" placeholder="123456" maxlength="6" inputmode="numeric">
+        </div>
+        <div class="form-group">
+          <label for="forgotPassword">New Password</label>
+          <input type="password" id="forgotPassword" placeholder="Min 6 characters">
+        </div>
+        <div class="form-group">
+          <label for="forgotConfirmPassword">Confirm Password</label>
+          <input type="password" id="forgotConfirmPassword" placeholder="Repeat password">
+        </div>
+        <button id="resetPasswordBtn" class="btn btn-success" onclick="resetPassword()">Reset Password</button>
+      </div>
+      <div class="nav-links" style="justify-content: center;">
+        <a onclick="showLogin()">← Back to Login</a>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE -->
+    <div id="attendanceScreen" class="hidden">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div>
+            <div class="profile-name" id="employeeName">Employee Name</div>
+            <div class="profile-id" id="employeeId">ID: -</div>
+          </div>
+          <span class="badge" id="attendanceStatus">Online</span>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">Login Time</div>
+            <div class="meta-val" id="attendanceLoginTime">--:--</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Live Clock</div>
+            <div class="meta-val" id="liveClock">--:--:--</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="attendanceMessage" class="alert hidden"></div>
+
+      <div class="timer-container">
+        <div class="timer-title">Working Duration</div>
+        <div class="timer-value" id="workDuration">00:00:00</div>
+      </div>
+
+      <div class="form-group">
+        <label for="fieldRemark">Field Visit Remarks</label>
+        <input type="text" id="fieldRemark" placeholder="e.g. Onsite client meeting">
+      </div>
+
+      <button id="fieldClockInBtn" class="btn btn-success" onclick="fieldClockIn()">Start Field Visit</button>
+      <button id="fieldClockOutBtn" class="btn hidden" onclick="fieldClockOut()">End Field Visit</button>
+
+      <div id="gpsStatus" class="gps-box hidden"></div>
+
+      <div class="divider"></div>
+
+      <button id="logoutBtn" class="btn btn-danger" onclick="logoutEmployee()">Logout / Shift End</button>
+    </div>
+
+  </div>
+
+  <script>
+    // Your Apps Script web app URL (Deploy > Manage deployments > Web app URL)
+    const API_URL = "https://script.google.com/macros/s/AKfycbyyaVcD4IAWnxw-gYQDqYg8s3-H6CosRPF1L1NKSgG0YvpQVHGpX1qBydKNFGN8FlHgXQ/exec";
+
+    let loginToken = null;
+    let employeeLoginTime = null;
+    let workTimer = null;
+
+    // ---- GPS settings ----
+    const GPS_TARGET_M = 50;
+    const GPS_MAX_M = 150;
+    const GPS_FIELD_WAIT = 25000;
+    const GPS_LOGIN_WAIT = 8000;
+
+    // ---------- server calls (plain fetch: no Google account needed) ----------
+    function api(fn, args) {
+      const ctrl = new AbortController();
+      const t = setTimeout(function () { ctrl.abort(); }, 40000);
+      return fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight
+        body: JSON.stringify({ fn: fn, args: args || [] }),
+        redirect: "follow",
+        credentials: "omit",
+        signal: ctrl.signal
+      }).then(function (r) {
+        clearTimeout(t);
+        return r.json();
+      }).catch(function (e) {
+        clearTimeout(t);
+        throw new Error(e && e.name === "AbortError" ? "Request timed out. Check your internet." : "No connection to server. Check your internet.");
+      });
+    }
+
+    window.addEventListener("load", function () {
+      showBrowserTips();
+      let savedToken = null;
+      try { savedToken = localStorage.getItem("attendanceLoginToken"); } catch (e) {}
+      if (savedToken) { loginToken = savedToken; restoreSession(); } else { showLogin(); }
+    });
+
+    function showBrowserTips() {
+      const ua = navigator.userAgent || "";
+      const tip = document.getElementById("browserTip");
+      const inApp = /FBAN|FBAV|Instagram|Snapchat|Line\/|MicroMessenger|GSA\/|Telegram|WhatsApp|; wv\)/i.test(ua);
+      if (inApp) {
+        tip.textContent = "You are inside an app's built-in browser, which often blocks GPS. Open this link in Chrome (Android) or Safari (iPhone) for correct location.";
+        tip.classList.remove("hidden");
+      } else if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: "geolocation" }).then(function (p) {
+          if (p.state === "denied") {
+            tip.textContent = "Location is blocked for this site. Allow Location in your browser's site settings, then reload.";
+            tip.classList.remove("hidden");
+          }
+        }).catch(function () {});
+      }
+    }
+
+    function hideAllScreens() {
+      ["loginScreen", "createPasswordScreen", "forgotPasswordScreen", "attendanceScreen"].forEach(function (id) {
+        document.getElementById(id).classList.add("hidden");
+      });
+    }
+    function showLogin() { hideAllScreens(); document.getElementById("loginScreen").classList.remove("hidden"); }
+    function showCreatePassword() { hideAllScreens(); document.getElementById("createPasswordScreen").classList.remove("hidden"); }
+    function showForgotPassword() { hideAllScreens(); document.getElementById("forgotPasswordScreen").classList.remove("hidden"); }
+
+    function showMessage(elementId, message, success) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.classList.remove("hidden", "alert-danger", "alert-success");
+      element.classList.add(success ? "alert-success" : "alert-danger");
+    }
+    function hideMessage(elementId) { document.getElementById(elementId).classList.add("hidden"); }
+
+    // ---------- GPS: wait for the best fix, never use cached positions ----------
+    function getBestGPS(waitMs, callback) {
+      if (!navigator.geolocation) { callback(null, "unsupported"); return; }
+      let best = null, done = false, watchId = null, timer = null;
+
+      function finish(err) {
+        if (done) return;
+        done = true;
+        if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+        clearTimeout(timer);
+        callback(best, best ? null : (err || "timeout"));
+      }
+
+      watchId = navigator.geolocation.watchPosition(
+        function (pos) {
+          const c = pos.coords;
+          if (Date.now() - pos.timestamp > 30000) return;
+          if (!best || c.accuracy < best.accuracy) {
+            best = { latitude: c.latitude, longitude: c.longitude, accuracy: Math.round(c.accuracy) };
+          }
+          setGPSStatus("Locking GPS... accuracy " + best.accuracy + " m");
+          if (c.accuracy <= GPS_TARGET_M) finish(null);
+        },
+        function (e) { finish(e && e.code === 1 ? "denied" : "error"); },
+        { enableHighAccuracy: true, timeout: waitMs, maximumAge: 0 }
+      );
+      timer = setTimeout(function () { finish(null); }, waitMs);
+    }
+
+    function gpsErrorText(err) {
+      if (err === "denied") return "Location permission denied. Allow Location for this site in your browser settings, then try again.";
+      if (err === "unsupported") return "This device/browser does not support GPS.";
+      return "Could not get a GPS fix. Turn ON Location (Precise/High accuracy), move to an open area and try again.";
+    }
+
+    function getFieldGPS(callback) {
+      setGPSStatus("Getting precise location...");
+      getBestGPS(GPS_FIELD_WAIT, function (gps, err) {
+        if (!gps) { setGPSStatus(gpsErrorText(err), true); callback(null); return; }
+        if (gps.accuracy > GPS_MAX_M) {
+          setGPSStatus("Location too weak (" + gps.accuracy + " m). Turn ON Location with Precise/High accuracy, move outdoors and try again.", true);
+          callback(null);
+          return;
+        }
+        callback(gps);
+      });
+    }
+
+    // ---------- login / session ----------
+    function loginEmployee() {
+      const employeeId = document.getElementById("loginEmployeeId").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      hideMessage("loginMessage");
+
+      if (!employeeId || !password) { showMessage("loginMessage", "Please fill in all fields.", false); return; }
+
+      const button = document.getElementById("loginBtn");
+      button.disabled = true;
+      button.textContent = "Authenticating & Locating...";
+
+      getBestGPS(GPS_LOGIN_WAIT, function (gps) {
+        api("loginEmployee", [employeeId, password, gps]).then(
+          function (result) {
+            button.disabled = false;
+            button.textContent = "Log In";
+            if (!result || !result.success) { showMessage("loginMessage", result ? result.message : "Login failed.", false); return; }
+            loginToken = result.token;
+            try { localStorage.setItem("attendanceLoginToken", loginToken); } catch (e) {}
+            document.getElementById("loginPassword").value = "";
+            openAttendanceScreen(result.employeeId, result.employeeName, result.loginTime);
+          },
+          function (error) {
+            button.disabled = false;
+            button.textContent = "Log In";
+            showMessage("loginMessage", error.message, false);
+          }
+        );
+      });
+    }
+
+    function restoreSession() {
+      api("getLoggedEmployee", [loginToken]).then(
+        function (result) {
+          if (!result || !result.success) {
+            try { localStorage.removeItem("attendanceLoginToken"); } catch (e) {}
+            loginToken = null;
+            showLogin();
+            return;
+          }
+          openAttendanceScreen(result.employeeId, result.employeeName, result.loginTime);
+        },
+        function () { showLogin(); showMessage("loginMessage", "No connection. Check your internet and reload.", false); }
+      );
+    }
+
+    function openAttendanceScreen(employeeId, employeeName, loginTime) {
+      hideAllScreens();
+      document.getElementById("attendanceScreen").classList.remove("hidden");
+      document.getElementById("employeeName").textContent = employeeName;
+      document.getElementById("employeeId").textContent = "ID: " + employeeId;
+      employeeLoginTime = new Date(loginTime);
+      document.getElementById("attendanceLoginTime").textContent = formatDateTime(employeeLoginTime);
+      startWorkTimer();
+      updateFieldVisitStatus();
+    }
+
+    setInterval(function () {
+      document.getElementById("liveClock").textContent = formatTime(new Date());
+    }, 1000);
+
+    function startWorkTimer() {
+      if (workTimer) clearInterval(workTimer);
+      updateWorkDuration();
+      workTimer = setInterval(updateWorkDuration, 1000);
+    }
+
+    function updateWorkDuration() {
+      if (!employeeLoginTime) return;
+      let seconds = Math.floor((Date.now() - employeeLoginTime.getTime()) / 1000);
+      if (seconds < 0) seconds = 0;
+      const hours = Math.floor(seconds / 3600);
+      seconds %= 3600;
+      const minutes = Math.floor(seconds / 60);
+      seconds %= 60;
+      document.getElementById("workDuration").textContent = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
+    }
+
+    // ---------- field visits ----------
+    function fieldAction(fn, doneText) {
+      const remark = document.getElementById("fieldRemark").value.trim();
+      hideMessage("attendanceMessage");
+      disableFieldButtons(true);
+
+      getFieldGPS(function (gps) {
+        if (!gps) { disableFieldButtons(false); return; }
+        api(fn, [loginToken, gps, remark]).then(
+          function (result) {
+            disableFieldButtons(false);
+            if (!result || !result.success) { showAttendanceMessage(result ? result.message : "Request failed.", false); return; }
+            document.getElementById("fieldRemark").value = "";
+            setGPSStatus(doneText + ": " + (result.location || "Location recorded") +
+              "\n" + (result.zone || "") + " (accuracy " + result.accuracy + " m)");
+            showAttendanceMessage(result.message, true);
+            updateFieldVisitStatus();
+          },
+          function (error) {
+            disableFieldButtons(false);
+            showAttendanceMessage(error.message, false);
+          }
+        );
+      });
+    }
+    function fieldClockIn() { fieldAction("clockIn", "Field Visit Active"); }
+    function fieldClockOut() { fieldAction("clockOut", "Field Visit Completed"); }
+
+    function updateFieldVisitStatus() {
+      if (!loginToken) return;
+      api("getTodayLoginStatus", [loginToken]).then(function (result) {
+        if (!result || !result.success) return;
+        const inBtn = document.getElementById("fieldClockInBtn");
+        const outBtn = document.getElementById("fieldClockOutBtn");
+        if (result.fieldVisitOpen) { inBtn.classList.add("hidden"); outBtn.classList.remove("hidden"); }
+        else { inBtn.classList.remove("hidden"); outBtn.classList.add("hidden"); }
+      }).catch(function () {});
+    }
+
+    function disableFieldButtons(disabled) {
+      document.getElementById("fieldClockInBtn").disabled = disabled;
+      document.getElementById("fieldClockOutBtn").disabled = disabled;
+    }
+
+    function logoutEmployee() {
+      const button = document.getElementById("logoutBtn");
+      button.disabled = true;
+      button.textContent = "Logging out...";
+
+      getBestGPS(GPS_LOGIN_WAIT, function (gps) {
+        api("logoutEmployee", [loginToken, gps]).then(
+          function (result) {
+            button.disabled = false;
+            button.textContent = "Logout / Shift End";
+            if (!result || !result.success) { showAttendanceMessage(result ? result.message : "Logout failed.", false); return; }
+            if (workTimer) clearInterval(workTimer);
+            try { localStorage.removeItem("attendanceLoginToken"); } catch (e) {}
+            loginToken = null;
+            showLogin();
+            showMessage("loginMessage", "Attendance completed. Total duration: " + result.totalHours, true);
+          },
+          function (error) {
+            button.disabled = false;
+            button.textContent = "Logout / Shift End";
+            showAttendanceMessage(error.message, false);
+          }
+        );
+      });
+    }
+
+    // ---------- passwords ----------
+    function sendCreateOTP() {
+      const employeeId = document.getElementById("createEmployeeId").value.trim();
+      const email = document.getElementById("createEmail").value.trim();
+      api("sendOTP", [employeeId, email]).then(function (res) {
+        showMessage("createMessage", res.message, res.success);
+        if (res.success) document.getElementById("createOtpArea").classList.remove("hidden");
+      }, function (e) { showMessage("createMessage", e.message, false); });
+    }
+
+    function createPassword() {
+      const employeeId = document.getElementById("createEmployeeId").value.trim();
+      const otp = document.getElementById("createOtp").value.trim();
+      const pass = document.getElementById("createPassword").value;
+      const confirm = document.getElementById("createConfirmPassword").value;
+      if (pass !== confirm) { showMessage("createMessage", "Passwords do not match.", false); return; }
+      api("createPassword", [employeeId, otp, pass]).then(function (res) {
+        showMessage("createMessage", res.message, res.success);
+        if (res.success) setTimeout(showLogin, 1200);
+      }, function (e) { showMessage("createMessage", e.message, false); });
+    }
+
+    function sendForgotOTP() {
+      const employeeId = document.getElementById("forgotEmployeeId").value.trim();
+      const email = document.getElementById("forgotEmail").value.trim();
+      api("sendForgotPasswordOTP", [employeeId, email]).then(function (res) {
+        showMessage("forgotMessage", res.message, res.success);
+        if (res.success) document.getElementById("forgotOtpArea").classList.remove("hidden");
+      }, function (e) { showMessage("forgotMessage", e.message, false); });
+    }
+
+    function resetPassword() {
+      const employeeId = document.getElementById("forgotEmployeeId").value.trim();
+      const otp = document.getElementById("forgotOtp").value.trim();
+      const pass = document.getElementById("forgotPassword").value;
+      const confirm = document.getElementById("forgotConfirmPassword").value;
+      if (pass !== confirm) { showMessage("forgotMessage", "Passwords do not match.", false); return; }
+      api("resetPassword", [employeeId, otp, pass]).then(function (res) {
+        showMessage("forgotMessage", res.message, res.success);
+        if (res.success) setTimeout(showLogin, 1200);
+      }, function (e) { showMessage("forgotMessage", e.message, false); });
+    }
+
+    // ---------- small helpers ----------
+    function showAttendanceMessage(msg, succ) { showMessage("attendanceMessage", msg, succ); }
+    function setGPSStatus(msg, err) {
+      const el = document.getElementById("gpsStatus");
+      el.textContent = msg || "";
+      el.classList.remove("hidden");
+      el.style.color = err ? "var(--danger)" : "var(--success)";
+    }
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function formatTime(d) { return pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds()); }
+    function formatDateTime(d) { return pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + "/" + d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+  </script>
+</body>
+</html>
